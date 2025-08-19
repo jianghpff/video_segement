@@ -1,0 +1,6 @@
+google-genai
+ffmpeg-python
+python-dotenv
+tqdm
+numpy
+gTTS
