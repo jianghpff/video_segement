@@ -1,0 +1,172 @@
+{
+  "shots": [
+    {
+      "start_time": "00:00:00",
+      "end_time": "00:00:04",
+      "description": "博主展示了她睡前护肤程序中使用的两种精华产品，并介绍了视频主题。",
+      "type": "Primary Shot",
+      "tags": [
+        "护肤",
+        "夜间护肤",
+        "精华",
+        "产品介绍"
+      ],
+      "has_product": true,
+      "products": [
+        {
+          "product_type": "精华",
+          "product_name": "POPA SKIN 5X神经酰胺精华",
+          "product_info": "白色瓶身，用于修复保湿。"
+        },
+        {
+          "product_type": "精华",
+          "product_name": "The skin collection 痘坑修护精华",
+          "product_info": "蓝色瓶身，用于解决痘坑问题。"
+        }
+      ],
+      "main_product_type": "精华",
+      "main_product_name": "The skin collection 痘坑修护精华",
+      "visuals": "一位穿着蓝色吊带衫的女性，在光线较暗的房间里，向镜头展示了两瓶精华液。",
+      "human_action": "女性双手各持一瓶精华液，先是向镜头展示产品，然后将它们放在面前的桌上。",
+      "effects_subtitles": "屏幕顶部有泰语字幕“ลงบำรุงผิวก่อนนอนกัน”（睡前滋养肌肤），并伴有闪烁的星星特效。"
+    },
+    {
+      "start_time": "00:00:04",
+      "end_time": "00:00:11",
+      "description": "博主特写展示蓝色的“The skin collection”精华，并开始将其涂抹在脸上。",
+      "type": "Primary Shot",
+      "tags": [
+        "精华",
+        "护肤教程",
+        "产品演示",
+        "祛痘坑"
+      ],
+      "has_product": true,
+      "products": [
+        {
+          "product_type": "精华",
+          "product_name": "The skin collection 痘坑修护精华",
+          "product_info": "蓝色瓶身滴管精华，用于解决痘坑问题。"
+        }
+      ],
+      "main_product_type": "精华",
+      "main_product_name": "The skin collection 痘坑修护精华",
+      "visuals": "女性特写，她拿着蓝色的精华液瓶子，背景是昏暗的房间。",
+      "human_action": "她将蓝色瓶身的精华液凑近镜头展示，然后用滴管将蓝色的精华液滴在额头、脸颊和下巴上。",
+      "effects_subtitles": "顶部字幕为“The skin collection”，中间泰语字幕为“เซรั่มแก้ปัญหาหลุมสิว”（解决痘坑问题的精华），底部字幕为“ให้เป็นประจำเช้า-เย็น เลิศ”（早晚常规使用，效果极佳）。"
+    },
+    {
+      "start_time": "00:00:11",
+      "end_time": "00:00:19",
+      "description": "博主用双手将“The skin collection”精华液均匀按摩至面部和颈部皮肤。",
+      "type": "Primary Shot",
+      "tags": [
+        "护肤手法",
+        "按摩",
+        "精华吸收",
+        "护肤教程"
+      ],
+      "has_product": true,
+      "products": [
+        {
+          "product_type": "精华",
+          "product_name": "The skin collection 痘坑修护精华",
+          "product_info": "蓝色瓶身滴管精华，用于解决痘坑问题。"
+        }
+      ],
+      "main_product_type": "精华",
+      "main_product_name": "The skin collection 痘坑修护精华",
+      "visuals": "穿着蓝色吊带的女性正在进行面部护肤，背景光线昏暗。",
+      "human_action": "她用双手手掌轻轻按压和涂抹脸上的精华液，从脸颊到额头，再到颈部，以促进精华吸收。",
+      "effects_subtitles": "屏幕上持续显示与前一镜头相同的品牌和产品功效字幕。"
+    },
+    {
+      "start_time": "00:00:19",
+      "end_time": "00:00:26",
+      "description": "博主展示并开始使用白色的“POPA SKIN 5X神经酰胺精华”进行保湿修复。",
+      "type": "Primary Shot",
+      "tags": [
+        "精华",
+        "保湿",
+        "修复",
+        "神经酰胺",
+        "产品演示"
+      ],
+      "has_product": true,
+      "products": [
+        {
+          "product_type": "精华",
+          "product_name": "POPA SKIN 5X神经酰胺精华",
+          "product_info": "白色瓶身，含有5X神经酰胺，用于修复和保湿。"
+        }
+      ],
+      "main_product_type": "精华",
+      "main_product_name": "POPA SKIN 5X神经酰胺精华",
+      "visuals": "女性手持白色瓶精华液，背景是她的房间。",
+      "human_action": "她将白色瓶身的精华液靠近镜头展示，然后打开瓶盖，用滴管将白色的精华液滴在额头和脸颊上。",
+      "effects_subtitles": "顶部是紫色艺术字字幕“POPASKIN 5XCERAMIDE”，底部是泰语字幕“เซรั่มซ่อมแซมความชุ่มชื้น”（修复保湿精华）。画面有粉色光晕和闪烁的特效。"
+    },
+    {
+      "start_time": "00:00:26",
+      "end_time": "00:00:30",
+      "description": "博主将“POPA SKIN”精华液均匀涂抹并按摩至全脸，以促进吸收。",
+      "type": "Primary Shot",
+      "tags": [
+        "护肤手法",
+        "按摩",
+        "精华吸收",
+        "保湿"
+      ],
+      "has_product": true,
+      "products": [
+        {
+          "product_type": "精华",
+          "product_name": "POPA SKIN 5X神经酰胺精华",
+          "product_info": "白色瓶身，含有5X神经酰胺，用于修复和保湿。"
+        }
+      ],
+      "main_product_type": "精华",
+      "main_product_name": "POPA SKIN 5X神经酰胺精华",
+      "visuals": "穿着蓝色吊带的女性正在进行面部护肤，背景昏暗。",
+      "human_action": "她用双手手掌在脸上打圈、提拉按摩，将精华液均匀涂抹开，促进皮肤吸收。",
+      "effects_subtitles": "屏幕上持续显示与前一镜头相同的品牌和产品功效字幕。"
+    },
+    {
+      "start_time": "00:00:30",
+      "end_time": "00:00:35",
+      "description": "视频结尾，博主再次展示两种精华产品，并配有总结性文字，推荐观众使用。",
+      "type": "Primary Shot",
+      "tags": [
+        "产品总结",
+        "护肤推荐",
+        "保湿",
+        "祛痘坑"
+      ],
+      "has_product": true,
+      "products": [
+        {
+          "product_type": "精华",
+          "product_name": "POPA SKIN 5X神经酰胺精华",
+          "product_info": "白色瓶身，用于修复保湿。"
+        },
+        {
+          "product_type": "精华",
+          "product_name": "The skin collection 痘坑修护精华",
+          "product_info": "蓝色瓶身，用于解决痘坑问题。"
+        }
+      ],
+      "main_product_type": "精华",
+      "main_product_name": "POPA SKIN 5X神经酰胺精华",
+      "visuals": "女性双手拿着两瓶精华，面带微笑看着镜头。",
+      "human_action": "她双手拿着两瓶精华产品，正对镜头向观众展示。",
+      "effects_subtitles": "顶部泰语字幕“รีบตำไปใช้กันจ้าแม่”（姐妹们快去试试），底部泰语字幕“ผิวหน้าชุ่มชื่นอิ่มฟู หมดปัญหาหลุมสิวกวนใจ”（皮肤水润饱满，告别烦人的痘坑问题）。画面上有小熊和蜜蜂的可爱动画贴纸。"
+    }
+  ],
+  "analysis_method": "single_shot_analysis",
+  "model_used": "models/gemini-2.5-pro",
+  "total_shots": 6,
+  "total_products": 8,
+  "product_types": [
+    "精华"
+  ]
+}

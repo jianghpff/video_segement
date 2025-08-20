@@ -21,7 +21,7 @@ class FeishuEnhancedIntegration:
         self.table_id = "tblg3kmG712Mw9kZ"
         self.access_token = None
         
-        # 新的字段映射（扁平化镜头表）
+        # 新的字段映射（扁平化镜头表 - 兼容现有字段）
         self.shot_fields = {
             "原视频文件名": "text",
             "镜头序号": "number", 
@@ -33,8 +33,7 @@ class FeishuEnhancedIntegration:
             "镜头类型": "select",
             "镜头标签": "text",
             "包含产品": "checkbox",
-            "产品类型": "select", 
-            "产品信息": "text",
+            "产品信息": "text",  # 合并所有产品信息（包含中文名称和数量）
             "视觉描述": "text",
             "人物动作": "text",
             "特效字幕": "text",
@@ -193,12 +192,12 @@ class FeishuEnhancedIntegration:
             return None
     
     def create_shot_record(self, shot_data: Dict, video_file_token: str = None) -> bool:
-        """创建单个镜头记录（使用字段名称而不是字段ID）"""
+        """创建单个镜头记录（支持多产品字段）"""
         try:
             if not self.access_token:
                 self.get_access_token()
             
-            print("🔧 使用方案1: 直接使用字段名称创建记录")
+            print("🔧 创建镜头记录（支持多产品）")
             
             # 构建记录数据 - 直接使用字段名称
             fields = {}
@@ -215,17 +214,46 @@ class FeishuEnhancedIntegration:
             
             # 内容描述
             fields["镜头描述"] = shot_data.get("description", "")
-            # 暂时跳过镜头类型字段，因为字段名称不匹配
-            # fields["镜头类型"] = shot_data.get("type", "")  
             
             tags = shot_data.get("tags", [])
             fields["镜头标签"] = ", ".join(tags) if tags else ""
             
-            # 产品信息
-            fields["包含产品"] = shot_data.get("has_product", False)
-            # 暂时跳过产品类型字段，因为字段名称不匹配
-            # fields["产品类型"] = shot_data.get("product_type", "未知")  
-            fields["产品信息"] = shot_data.get("product_info", "")
+            # 多产品信息处理（合并到现有字段）
+            has_product = shot_data.get("has_product", False)
+            fields["包含产品"] = has_product
+            
+            if has_product:
+                # 处理多产品列表
+                products = shot_data.get("products", [])
+                if products:
+                    # 构建详细的产品信息字符串
+                    product_info_parts = []
+                    
+                    # 添加产品数量信息
+                    product_info_parts.append(f"【产品数量】{len(products)}个")
+                    
+                    # 添加主要产品名称
+                    main_product = products[0] if products else {}
+                    main_product_name = main_product.get("product_name", "")
+                    if main_product_name:
+                        product_info_parts.append(f"【主要产品】{main_product_name}")
+                    
+                    # 添加所有产品详细信息
+                    product_details = []
+                    for i, product in enumerate(products, 1):
+                        detail = f"{i}.{product.get('product_name', '')}({product.get('product_type', '')})"
+                        if product.get('product_info'):
+                            detail += f" - {product.get('product_info', '')}"
+                        product_details.append(detail)
+                    
+                    if product_details:
+                        product_info_parts.append(f"【产品详情】{'; '.join(product_details)}")
+                    
+                    fields["产品信息"] = " | ".join(product_info_parts)
+                else:
+                    fields["产品信息"] = ""
+            else:
+                fields["产品信息"] = ""
             
             # 视觉内容
             fields["视觉描述"] = shot_data.get("visuals", "")
@@ -302,7 +330,7 @@ class FeishuEnhancedIntegration:
                 try:
                     print(f"\n--- 处理镜头 {i}/{total_shots} ---")
                     
-                    # 构建镜头数据
+                    # 构建镜头数据（支持多产品）
                     shot_data = {
                         "original_video_name": video_filename,
                         "shot_number": i,
@@ -314,8 +342,8 @@ class FeishuEnhancedIntegration:
                         "type": shot.get("type", ""),
                         "tags": shot.get("tags", []),
                         "has_product": shot.get("has_product", False),
-                        "product_type": shot.get("product_type", "未知"),
-                        "product_info": shot.get("product_info", ""),
+                        "products": shot.get("products", []),  # 多产品支持
+                        "main_product_name": shot.get("main_product_name", ""),
                         "visuals": shot.get("visuals", ""),
                         "human_action": shot.get("human_action", ""),
                         "effects_subtitles": shot.get("effects_subtitles", "")
@@ -359,6 +387,8 @@ class FeishuEnhancedIntegration:
         except Exception as e:
             print(f"❌ 整体上传过程异常: {e}")
             return False
+    
+
     
     def calculate_duration(self, start_time: str, end_time: str) -> str:
         """计算镜头时长"""
