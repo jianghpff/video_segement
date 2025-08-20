@@ -6,6 +6,9 @@ from prompts import (
     SCENE_SYSTEM_INSTRUCTION, SCENE_USER_PROMPT, SCENE_RESPONSE_SCHEMA,
     SHOT_SYSTEM_INSTRUCTION, SHOT_USER_PROMPT, SHOT_RESPONSE_SCHEMA
 )
+from prompts_new import (
+    ENHANCED_SHOT_SYSTEM_INSTRUCTION, ENHANCED_SHOT_USER_PROMPT, ENHANCED_SHOT_RESPONSE_SCHEMA
+)
 import time
 import ffmpeg
 from tqdm import tqdm
@@ -242,6 +245,125 @@ def cut_video_shots(video_path, shots, output_dir="output"):
 
 
     print(f"\n视频切割完成！所有镜头已保存至 '{output_dir}' 目录。")
+
+
+def analyze_video_enhanced(video_path):
+    """
+    重构版本：使用Gemini-2.5-flash一次性完成丰富的镜头分析
+    返回格式保持兼容：{"scenes": [...], "shots": [...]}
+    但scenes为空，所有信息都在shots中
+    """
+    try:
+        load_dotenv()
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            print("❌ 请在 .env 文件中设置您的 GEMINI_API_KEY")
+            return None
+
+        client = genai.Client()
+        
+        print("📁 正在上传视频文件...")
+        uploaded_file = _upload_with_retry(client, file=video_path)
+        print(f"✅ 视频上传成功: {uploaded_file.name}")
+        
+        print("🤖 开始一体化视频分析（使用Gemini-2.5-flash）...")
+        
+        generation_config = {
+            "response_mime_type": "application/json",
+            "response_schema": ENHANCED_SHOT_RESPONSE_SCHEMA
+        }
+        
+        # 等待视频处理完成
+        while uploaded_file.state.name == "PROCESSING":
+            print(".", end="", flush=True)
+            time.sleep(10)
+            uploaded_file = _files_get_with_retry(client, name=uploaded_file.name)
+
+        if uploaded_file.state.name == "FAILED":
+            raise Exception(f"视频处理失败: {uploaded_file.state}")
+        
+        # 使用Gemini-2.5-flash进行一次性分析
+        response = _generate_with_retry(
+            client,
+            model="models/gemini-2.5-flash",
+            contents=[ENHANCED_SHOT_USER_PROMPT, uploaded_file],
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": ENHANCED_SHOT_RESPONSE_SCHEMA,
+                "system_instruction": ENHANCED_SHOT_SYSTEM_INSTRUCTION,
+            }
+        )
+        
+        if not response or not response.text:
+            print("❌ Gemini 返回空响应")
+            return None
+            
+        try:
+            analysis_result = json.loads(response.text)
+            shots = analysis_result.get("shots", [])
+            
+            if not shots:
+                print("❌ 未检测到有效的镜头数据")
+                return None
+            
+            print(f"✅ 分析完成！检测到 {len(shots)} 个镜头")
+            
+            # 为了保持兼容性，构造返回格式包含scenes和shots
+            # scenes将基于shots数据生成摘要
+            scenes = generate_scenes_from_shots(shots)
+            
+            return {
+                "scenes": scenes,
+                "shots": shots
+            }
+            
+        except json.JSONDecodeError as e:
+            print(f"❌ JSON解析失败: {e}")
+            print(f"原始响应: {response.text}")
+            return None
+            
+    except Exception as e:
+        print(f"❌ 分析过程中发生错误: {e}")
+        return None
+
+
+def generate_scenes_from_shots(shots):
+    """
+    从镜头数据生成场景摘要，保持兼容性
+    """
+    if not shots:
+        return []
+    
+    # 提取整体信息
+    first_shot = shots[0]
+    last_shot = shots[-1]
+    
+    # 统计产品信息
+    product_shots = [shot for shot in shots if shot.get('has_product', False)]
+    product_types = list(set([shot.get('product_type', '未知') for shot in product_shots if shot.get('product_type') != '未知']))
+    
+    # 合并所有产品信息
+    product_info_list = [shot.get('product_info', '') for shot in shots if shot.get('product_info', '').strip()]
+    product_info = '; '.join(set(product_info_list)) if product_info_list else ''
+    
+    # 合并视觉描述
+    visual_descriptions = [shot.get('description', '') for shot in shots]
+    combined_description = '；'.join(visual_descriptions[:3])  # 取前3个镜头的描述
+    
+    # 生成场景
+    scene = {
+        "start_time": first_shot.get('start_time', '00:00:00'),
+        "end_time": last_shot.get('end_time', '00:00:00'),
+        "description": combined_description,
+        "has_product": len(product_shots) > 0,
+        "product_type": product_types[0] if product_types else '未知',
+        "product_info": product_info,
+        "visuals": first_shot.get('visuals', ''),
+        "human_action": first_shot.get('human_action', ''),
+        "effects_subtitles": first_shot.get('effects_subtitles', '')
+    }
+    
+    return [scene]
 
 
 # 本地测试功能

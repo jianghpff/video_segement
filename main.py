@@ -1,7 +1,8 @@
 print("脚本开始执行...")
 import os
 import sys
-from video_processor import analyze_video, cut_video_shots
+from video_processor import analyze_video, analyze_video_enhanced, cut_video_shots
+from feishu_enhanced_integration import FeishuEnhancedIntegration
 import glob
 import json
 
@@ -14,8 +15,9 @@ def process_video(video_path):
     print(f"▶️  开始处理视频: {video_filename}")
     print("-" * 60)
 
-    # 步骤 1: 使用 Gemini 分析视频
-    analysis_result = analyze_video(video_path)
+    # 步骤 1: 使用重构的一体化分析（Gemini-2.5-flash）
+    print("📊 使用新的一体化分析模式...")
+    analysis_result = analyze_video_enhanced(video_path)
 
     if analysis_result and "shots" in analysis_result and analysis_result["shots"]:
         # 打印 Gemini 返回的 JSON 结果
@@ -39,9 +41,24 @@ def process_video(video_path):
             print(f"警告：保存场景级元数据失败：{e}")
 
         cut_video_shots(video_path, analysis_result["shots"], output_dir=output_subdir)
+        
+        # 步骤 3: 上传分析结果到飞书表格（扁平化镜头表模式）
+        print("\n📊 开始上传分析结果到飞书表格...")
+        try:
+            feishu = FeishuEnhancedIntegration()
+            upload_success = feishu.upload_video_analysis_enhanced(video_path, analysis_result)
+            if upload_success:
+                print("✅ 飞书上传成功")
+            else:
+                print("⚠️ 飞书上传失败，但本地处理已完成")
+        except Exception as e:
+            print(f"⚠️ 飞书上传异常: {e}")
+        
         print(f"✅  成功处理完视频: {video_filename}")
+        return analysis_result
     else:
         print(f"❌  处理失败：未能从 Gemini 获取 '{video_filename}' 的有效镜头信息。")
+        return None
     
     print("-" * 60 + "\n")
 
