@@ -33,6 +33,7 @@ class FeishuEnhancedIntegration:
             "镜头类型": "select",
             "镜头标签": "text",
             "包含产品": "checkbox",
+            "产品名称": "text",
             "产品信息": "text",  # 合并所有产品信息（包含中文名称和数量）
             "视觉描述": "text",
             "人物动作": "text",
@@ -226,6 +227,9 @@ class FeishuEnhancedIntegration:
                 # 处理多产品列表
                 products = shot_data.get("products", [])
                 if products:
+                    # 写入产品名称（中文），以顿号连接
+                    product_names = [p.get("product_name", "") for p in products if p.get("product_name")]
+                    fields["产品名称"] = "、".join(product_names) if product_names else ""
                     # 构建详细的产品信息字符串
                     product_info_parts = []
                     
@@ -251,8 +255,10 @@ class FeishuEnhancedIntegration:
                     
                     fields["产品信息"] = " | ".join(product_info_parts)
                 else:
+                    fields["产品名称"] = ""
                     fields["产品信息"] = ""
             else:
+                fields["产品名称"] = ""
                 fields["产品信息"] = ""
             
             # 视觉内容
